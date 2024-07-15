@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝐒𝐎𝐍𝐆 𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃𝐄𝐑 𝐅0𝐑 𝐅𝐑𝐄𝐄 𝐁𝐘 𝐙𝐂𝐃𝐒 𝐏𝐇</title>
+    <link rel="icon" type="image/jpg" href="https://i.ibb.co/64G14k3/sptfy.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+        }
+
+        #searchContainer {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 600px;
+            gap: 10px;
+            align-items: center; 
+        }
+
+        #searchInput {
+            padding: 10px;
+            flex: 1;
+            border: 1px solid #333;
+            border-radius: 25px;
+            background-color: #1e1e1e;
+            color: #fff;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            outline: none;
+        }
+
+        #searchButton {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background-color: #1db954;
+            color: #fff;
+            cursor: pointer;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            transition: background-color 0.3s;
+        }
+
+        #searchButton:hover {
+            background-color: #1aa34a;
+        }
+
+        #results {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .songDiv {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #333;
+            text-align: center;
+            margin: 10px; 
+            transition: transform 0.2s;
+        }
+
+        .songDiv:hover {
+            transform: scale(1.02);
+        }
+
+        img {
+            width: 100px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            width: calc(100% - 20px);
+            background-color: #1db954;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #1aa34a;
+        }
+
+        #audioPlayer {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #333;
+            border-radius: 10px;
+            padding: 10px;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #ccc;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        @media (max-width: 600px) {
+            #searchContainer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #searchInput {
+                margin-bottom: 10px;
+            }
+
+            #searchButton {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1><i class="fab fa-spotify"></i> 𝐒𝐎𝐍𝐆 𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃𝐄𝐑 𝐒𝐏𝐓𝐅𝐘</h1>
+    <div id="searchContainer">
+        <input type="text" id="searchInput" placeholder="𝐒𝐄𝐀𝐑𝐂𝐇 𝐅𝐎𝐑 𝐀 𝐒𝐎𝐍𝐆" />
+        <button id="searchButton">𝐒𝐄𝐀𝐑𝐂𝐇</button>
+    </div>
+    <div id="results"></div>
+    <audio id="audioPlayer" controls>
+        <source id="audioSource" src="" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <footer>
+        <p>𝙲𝚛𝚎𝚊𝚝𝚎𝚍 𝚋𝚢 <strong><a href="https://www.facebook.com/marjhunhndsm" target="_blank" style="color: #ccc; text-decoration: none;">Marjhun Baylon</a></strong></p>
+    </footer>
+
+    <script>
+        document.getElementById('searchButton').addEventListener('click', async () => {
+            const query = document.getElementById('searchInput').value;
+            const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            displayResults(data);
+        });
+
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            data.forEach(song => {
+                const songDiv = document.createElement('div');
+                songDiv.className = 'songDiv';
+
+                const songTitle = document.createElement('h3');
+                songTitle.textContent = song.name;
+
+                const songImage = document.createElement('img');
+                songImage.src = song.image;
+                songImage.alt = song.name;
+
+                const trackLink = document.createElement('a');
+                trackLink.href = song.track;
+                trackLink.target = '_blank';
+                trackLink.textContent = 'Listen on Spotify';
+                trackLink.className = 'button';
+
+                const downloadButton = document.createElement('a');
+                downloadButton.href = song.download;
+                downloadButton.textContent = 'Download MP3';
+                downloadButton.className = 'button';
+
+                const playButton = document.createElement('button');
+                playButton.textContent = 'Play Music';
+                playButton.className = 'button';
+                playButton.onclick = () => playMusic(song.download);
+
+                songDiv.appendChild(songImage);
+                songDiv.appendChild(songTitle);
+                songDiv.appendChild(trackLink);
+                songDiv.appendChild(downloadButton);
+                songDiv.appendChild(playButton);
+                resultsDiv.appendChild(songDiv);
+            });
+        }
+
+        function playMusic(url) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const audioSource = document.getElementById('audioSource');
+
+            audioSource.src = url;
+            audioPlayer.load();
+            audioPlayer.style.display = 'block';
+            audioPlayer.play();
+        }
+    </script>
+</body>
+</html>
